@@ -34,7 +34,7 @@ const params = {
     cameraSpeed: 1.5,
 };
 
-const smokeTex = new THREE.TextureLoader().load('smoke.png');
+const smokeTex = new THREE.TextureLoader().load('images/smoke.png');
 
 const smokeMat = new THREE.MeshStandardMaterial({
     map: smokeTex,
@@ -149,7 +149,7 @@ scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
 // loading in the texture for the sky
 const loader = new THREE.TextureLoader();
-loader.load('sky.jpg', function(texture) {
+loader.load('images/sky.jpg', function(texture) {
     scene.background = texture;
 });
 
