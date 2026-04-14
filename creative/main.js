@@ -31,6 +31,7 @@ const params = {
     pitchSpeed: 0,
     rollProgram: false,
     pitchProgram: false,
+    srbSep: false,
     cameraSpeed: 1.5,
 };
 
@@ -97,7 +98,7 @@ function createSmoke(){
     smokeTrail.push(rSRBsmoke);
 }
 
-function updateSmoke() {
+function exhaustSmoke() {
     for (let i = smokeTrail.length - 1; i >= 0; i--) {
         const p = smokeTrail[i];
 
@@ -180,12 +181,6 @@ gui.add(sls.position, "y").listen();
 gui.add(params, 'upperstageElevation', 0, 10).step(1).onChange(val => {
     if (upperStage) upperStage.position.y = val, las.position.y = val
 });
-gui.add(params, 'srbSep', 0, 10).step(1).onChange(val => {
-    if(srbR && srbL) {
-        srbR.position.x =  val;
-        srbL.position.x = -(val);
-    }
-});
 
 
 function animate() {
@@ -211,8 +206,18 @@ function animate() {
                 params.rollSpeed += 0.0001;
                 rocketPivot.rotation.y += params.rollSpeed;
                 params.cameraSpeed = 1;
-
             }
+
+            // srb seperation
+            if (sls.position.y >= 500 && !params.srbSep){
+                params.srbSep = true;
+                console.log('SRB Sep!');
+                srbR.position.x =  5;
+                srbL.position.x = -(5);
+                scene.attach(srbR);
+                scene.attach(srbL);
+            }
+
             // Wont pitch down until it rocket has rotated
             if (rocketPivot.rotation.y >= Math.PI/2){
                 params.pitchSpeed += 0.004;
@@ -223,18 +228,21 @@ function animate() {
                 sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
                 // allows rockt to speed up significantly once picthing is complete
                 if(sls.rotation.x >= 0.5){
-                    // sls.position.z += .09;
                     sls.rotation.x = 0.5;
                 } 
-                // Allows velocity to increase significantly once high enough
-                if(sls.position.y > 100){
-                    //sls.position.z += .3;
-                }
             }
         }
     } else {
         sls.position.y = -1.5;
         sls.position.z = 0;
+
+        sls.add(srbL);
+        sls.add(srbR);
+        srbL.position.set(0,0,0);
+        srbR.position.set(0,0,0);
+        srbL.rotation.set(0,0,0);
+        srbR.rotation.set(0,0,0);
+
         params.velocity = 0;
         params.rollSpeed = 0;
         params.pitchSpeed = 0;
@@ -245,7 +253,7 @@ function animate() {
         camera.position.set(0,0, 100);
     }
 
-    updateSmoke();
+    exhaustSmoke();
 
     renderer.render(scene, camera);
 }
