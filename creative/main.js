@@ -189,7 +189,7 @@ const clock = new THREE.Clock();
 function animate() {
     requestAnimationFrame(animate);
 
-    const dt = clock.getDelta()
+    const dt = clock.getDelta();
 
     if (params.launch && sls) {
         launchMount.armPivot.rotation.y += 0.008;
@@ -200,7 +200,7 @@ function animate() {
             for (let i = 0; i < 4; i++) {
                 createSmoke();
             }
-            params.velocity += (5.5 + params.gravity) * dt ; //0.002
+            params.velocity += (5.5 + params.gravity) * dt ; 
             sls.position.y += params.velocity;
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
@@ -213,19 +213,24 @@ function animate() {
                 params.cameraSpeed = 1;
             }
 
-            const srbVel = params.velocity;
             // srb seperation
             if (sls.position.y >= 500 && !params.srbSep){ // y = 1500 should be 20 sec into ascent
                 params.srbSep = true;
                 console.log('SRB Sep!');
                 scene.attach(srbR);
                 scene.attach(srbL);
+
+                srbL.userData.vel = new THREE.Vector3(-.2, params.velocity, 0);
+                srbR.userData.vel = new THREE.Vector3(.2, params.velocity, 0);
             }
             if (sls.position.y >= 500 && params.srbSep){
-                srbL.position.y += srbVel + params.gravity * dt;
-                srbR.position.y += srbVel + params.gravity * dt;
-                srbL.position.x += srbVel;
-                srbR.position.x += srbVel;
+                [srbL, srbR].forEach(srb => {
+                    const vel = srb.userData.vel;
+
+                    vel.y +=  params.gravity * dt;
+
+                    srb.position.addScaledVector(vel, dt);
+                })
             }
 
             // Wont pitch down until it rocket has rotated
@@ -246,12 +251,15 @@ function animate() {
         sls.position.y = -1.5;
         sls.position.z = 0;
 
+        params.srbSep = false;
         sls.add(srbL);
         sls.add(srbR);
         srbL.position.set(0,0,0);
         srbR.position.set(0,0,0);
         srbL.rotation.set(0,0,0);
         srbR.rotation.set(0,0,0);
+        srbL.userData.vel = null;
+        srbR.userData.vel = null;
 
         params.velocity = 0;
         params.rollSpeed = 0;
