@@ -22,6 +22,7 @@ const params = {
     enginesectionColor: "#ffffff",
     engineColor: "#808080",
     mlColor: 0x696563,
+    gravity: -5.3623,
     upperstageElevation: 0,
     lasElevation: 0,
     srbSep: 0,
@@ -182,9 +183,13 @@ gui.add(params, 'upperstageElevation', 0, 10).step(1).onChange(val => {
     if (upperStage) upperStage.position.y = val, las.position.y = val
 });
 
+const clock = new THREE.Clock();
+
 
 function animate() {
     requestAnimationFrame(animate);
+
+    const dt = clock.getDelta();
 
     if (params.launch && sls) {
         launchMount.armPivot.rotation.y += 0.008;
@@ -195,7 +200,7 @@ function animate() {
             for (let i = 0; i < 4; i++) {
                 createSmoke();
             }
-            params.velocity += 0.002;
+            params.velocity += (5.5 + params.gravity) * dt ; 
             sls.position.y += params.velocity;
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
@@ -209,13 +214,23 @@ function animate() {
             }
 
             // srb seperation
-            if (sls.position.y >= 500 && !params.srbSep){
+            if (sls.position.y >= 500 && !params.srbSep){ // y = 1500 should be 20 sec into ascent
                 params.srbSep = true;
                 console.log('SRB Sep!');
-                srbR.position.x =  5;
-                srbL.position.x = -(5);
                 scene.attach(srbR);
                 scene.attach(srbL);
+
+                srbL.userData.vel = new THREE.Vector3(-.2, params.velocity, 0);
+                srbR.userData.vel = new THREE.Vector3(.2, params.velocity, 0);
+            }
+            if (sls.position.y >= 500 && params.srbSep){
+                [srbL, srbR].forEach(srb => {
+                    const vel = srb.userData.vel;
+
+                    vel.y +=  params.gravity * dt;
+
+                    srb.position.addScaledVector(vel, dt);
+                })
             }
 
             // Wont pitch down until it rocket has rotated
@@ -226,22 +241,25 @@ function animate() {
                 
                 const rotateSpeed = 0.002;
                 sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
-                // allows rockt to speed up significantly once picthing is complete
+                // allows rocket to speed up significantly once picthing is complete
                 if(sls.rotation.x >= 0.5){
                     sls.rotation.x = 0.5;
                 } 
             }
         }
-    } else {
+    } else { // Resets the scene
         sls.position.y = -1.5;
         sls.position.z = 0;
 
+        params.srbSep = false;
         sls.add(srbL);
         sls.add(srbR);
         srbL.position.set(0,0,0);
         srbR.position.set(0,0,0);
         srbL.rotation.set(0,0,0);
         srbR.rotation.set(0,0,0);
+        srbL.userData.vel = null;
+        srbR.userData.vel = null;
 
         params.velocity = 0;
         params.rollSpeed = 0;
