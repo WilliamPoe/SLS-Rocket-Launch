@@ -155,6 +155,7 @@ scene.add(light);
 const helper = new THREE.DirectionalLightHelper( light, 5 );
 //scene.add( helper );
 
+// point lighting
 const srbLFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 
@@ -233,7 +234,7 @@ function animate() {
             camera.position.y += params.velocity/params.cameraSpeed;
 
             // Wont rotate until the rocket is high enough
-            // Change the 20 to a higher value!!
+            // Change the 20 to a higher value eventually!!
             if(sls.position.y >= 20 && rocketPivot.rotation.y <= Math.PI/2){
                 params.rollSpeed += 0.0001;
                 rocketPivot.rotation.y += params.rollSpeed;
