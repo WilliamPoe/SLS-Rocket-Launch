@@ -155,6 +155,9 @@ scene.add(light);
 const helper = new THREE.DirectionalLightHelper( light, 5 );
 //scene.add( helper );
 
+const srbLFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+
 scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
 // loading in the texture for the sky
@@ -204,12 +207,28 @@ function animate() {
 
         // Wont launch rocket until crew arm in stored
         if(launchMount.armPivot.rotation.y >= Math.PI ){
+
+            const lNozzel = srbL.getObjectByName("left_nozzel");
+            const rNozzel = srbR.getObjectByName("right_nozzel");
+
+            const lNozzelPos = new THREE.Vector3();
+            const rNozzelPos = new THREE.Vector3();
+            lNozzel.getWorldPosition(lNozzelPos);
+            rNozzel.getWorldPosition(rNozzelPos);
+
+            srbLFlame.position.copy(lNozzelPos);
+            srbRFlame.position.copy(rNozzelPos);
+            srbLFlame.position.y = lNozzelPos.y-10;
+            srbRFlame.position.y = rNozzelPos.y-10;
+
             launchMount.armPivot.rotation.y = Math.PI;
             for (let i = 0; i < 4; i++) {
                 createSmoke();
             }
             params.velocity += (5.5 + params.gravity) * dt ; 
             sls.position.y += params.velocity;
+            scene.add(srbLFlame);
+            scene.add(srbRFlame);
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
 
@@ -219,6 +238,20 @@ function animate() {
                 params.rollSpeed += 0.0001;
                 rocketPivot.rotation.y += params.rollSpeed;
                 params.cameraSpeed = 1;
+            }
+
+            // Wont pitch down until it rocket has rotated
+            if (rocketPivot.rotation.y >= Math.PI/2){
+                params.pitchSpeed += 0.004;
+                sls.position.z += params.pitchSpeed;
+                camera.position.x += params.pitchSpeed;
+                
+                const rotateSpeed = 0.002;
+                sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
+                // allows rocket to speed up significantly once picthing is complete
+                if(sls.rotation.x >= 0.5){
+                    sls.rotation.x = 0.5;
+                } 
             }
 
             // srb seperation
@@ -238,22 +271,17 @@ function animate() {
                     vel.y +=  params.gravity * dt;
 
                     srb.position.addScaledVector(vel, dt);
+                    if (srb.position.y <= 400){
+                        scene.remove(srb);
+                        scene.remove(srbLFlame);
+                        scene.remove(srbRFlame);
+                    }
                 })
             }
 
-            // Wont pitch down until it rocket has rotated
-            if (rocketPivot.rotation.y >= Math.PI/2){
-                params.pitchSpeed += 0.004;
-                sls.position.z += params.pitchSpeed;
-                camera.position.x += params.pitchSpeed;
-                
-                const rotateSpeed = 0.002;
-                sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
-                // allows rocket to speed up significantly once picthing is complete
-                if(sls.rotation.x >= 0.5){
-                    sls.rotation.x = 0.5;
-                } 
-            }
+            // Add LAS seperation
+
+            // Add Second stage seperation
         }
     } else { // Resets the scene
         sls.position.y = -1.5;
@@ -268,6 +296,8 @@ function animate() {
         srbR.rotation.set(0,0,0);
         srbL.userData.vel = null;
         srbR.userData.vel = null;
+        scene.remove(srbLFlame);
+        scene.remove(srbRFlame);
 
         params.velocity = 0;
         params.rollSpeed = 0;
