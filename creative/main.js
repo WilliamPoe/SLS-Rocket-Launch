@@ -114,19 +114,19 @@ function exhaustSmoke() {
         // moves smoke down
         p.position.y -= 0.1;
 
-        // Slight drift
+        // random spread to the smoke
         p.position.x += (Math.random() - 1) * 0.02;
         p.position.z += (Math.random() - 1) * 0.02;
 
-        // Expand
+        // expand smoke cloud
         p.scale.multiplyScalar(1.04);
 
-        // Fade out
+        // fade smoke out 
         p.material.opacity *= .97;
 
         p.lookAt(camera.position);
 
-        // remove dead particles
+        // remove smoke once it is not visible
         if (p.material.opacity < 0.02) {
             scene.remove(p);
             smokeTrail.splice(i, 1);
