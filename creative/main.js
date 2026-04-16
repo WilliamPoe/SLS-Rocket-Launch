@@ -147,6 +147,9 @@ scene.add(light);
 const helper = new THREE.DirectionalLightHelper( light, 5 );
 //scene.add( helper );
 
+const srbLFlame = new THREE.PointLight(0xFFA500, 1000);
+const srbRFlame = new THREE.PointLight(0xFFA500, 1000);
+
 scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
 // loading in the texture for the sky
@@ -196,12 +199,28 @@ function animate() {
 
         // Wont launch rocket until crew arm in stored
         if(launchMount.armPivot.rotation.y >= Math.PI ){
+
+            const lNozzel = srbL.getObjectByName("left_nozzel");
+            const rNozzel = srbR.getObjectByName("right_nozzel");
+
+            const lNozzelPos = new THREE.Vector3();
+            const rNozzelPos = new THREE.Vector3();
+            lNozzel.getWorldPosition(lNozzelPos);
+            rNozzel.getWorldPosition(rNozzelPos);
+
+            srbLFlame.position.copy(lNozzelPos);
+            srbRFlame.position.copy(rNozzelPos);
+            srbLFlame.position.y = lNozzelPos.y-10;
+            srbRFlame.position.y = rNozzelPos.y-10;
+
             launchMount.armPivot.rotation.y = Math.PI;
             for (let i = 0; i < 4; i++) {
                 createSmoke();
             }
             params.velocity += (5.5 + params.gravity) * dt ; 
             sls.position.y += params.velocity;
+            scene.add(srbLFlame);
+            scene.add(srbRFlame);
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
 
@@ -230,6 +249,9 @@ function animate() {
                     vel.y +=  params.gravity * dt;
 
                     srb.position.addScaledVector(vel, dt);
+                    if (srb.position.y <= 400){
+                        scene.remove(srb);
+                    }
                 })
             }
 
