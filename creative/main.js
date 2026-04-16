@@ -14,6 +14,14 @@ globalThis.TW = TW;
 var scene = new THREE.Scene();
 globalThis.scene = scene;
 
+//=====================Added For Project Draft=====================
+/*
+1. Added smoke trail for rocket  during launch
+2. Added more detail to the IPCS in the rocket.js
+3. Added SRB seperation from the core stage
+4. Added a light to each of the SRBs to giv the look of a flame
+*/
+
 // ================================================================
 // Build your scene here
 // params for the rocket
