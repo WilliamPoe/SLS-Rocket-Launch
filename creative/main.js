@@ -232,6 +232,20 @@ function animate() {
                 params.cameraSpeed = 1;
             }
 
+            // Wont pitch down until it rocket has rotated
+            if (rocketPivot.rotation.y >= Math.PI/2){
+                params.pitchSpeed += 0.004;
+                sls.position.z += params.pitchSpeed;
+                camera.position.x += params.pitchSpeed;
+                
+                const rotateSpeed = 0.002;
+                sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
+                // allows rocket to speed up significantly once picthing is complete
+                if(sls.rotation.x >= 0.5){
+                    sls.rotation.x = 0.5;
+                } 
+            }
+
             // srb seperation
             if (sls.position.y >= 500 && !params.srbSep){ // y = 1500 should be 20 sec into ascent
                 params.srbSep = true;
@@ -257,19 +271,9 @@ function animate() {
                 })
             }
 
-            // Wont pitch down until it rocket has rotated
-            if (rocketPivot.rotation.y >= Math.PI/2){
-                params.pitchSpeed += 0.004;
-                sls.position.z += params.pitchSpeed;
-                camera.position.x += params.pitchSpeed;
-                
-                const rotateSpeed = 0.002;
-                sls.rotation.x = Math.min(sls.rotation.x + rotateSpeed, 0.5);
-                // allows rocket to speed up significantly once picthing is complete
-                if(sls.rotation.x >= 0.5){
-                    sls.rotation.x = 0.5;
-                } 
-            }
+            // Add LAS seperation
+
+            // Add Second stage seperation
         }
     } else { // Resets the scene
         sls.position.y = -1.5;
