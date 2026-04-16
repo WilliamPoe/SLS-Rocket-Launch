@@ -147,8 +147,8 @@ scene.add(light);
 const helper = new THREE.DirectionalLightHelper( light, 5 );
 //scene.add( helper );
 
-const srbLFlame = new THREE.PointLight(0xFFA500, 1000);
-const srbRFlame = new THREE.PointLight(0xFFA500, 1000);
+const srbLFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 
 scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
@@ -251,6 +251,8 @@ function animate() {
                     srb.position.addScaledVector(vel, dt);
                     if (srb.position.y <= 400){
                         scene.remove(srb);
+                        scene.remove(srbLFlame);
+                        scene.remove(srbRFlame);
                     }
                 })
             }
@@ -282,6 +284,8 @@ function animate() {
         srbR.rotation.set(0,0,0);
         srbL.userData.vel = null;
         srbR.userData.vel = null;
+        scene.remove(srbLFlame);
+        scene.remove(srbRFlame);
 
         params.velocity = 0;
         params.rollSpeed = 0;
