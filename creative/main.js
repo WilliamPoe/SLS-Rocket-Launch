@@ -79,7 +79,7 @@ rocketPivot.add(sls);
 rocketPivot.position.y = 0;
 sls.position.set(0, 0, 0);
 
-function createSmoke(){
+function addSmoke(){
     const lSRBsmoke = new THREE.Mesh(smokeGeom, smokeMat.clone());
     const rSRBsmoke = new THREE.Mesh(smokeGeom, smokeMat.clone());
 
@@ -223,7 +223,7 @@ function animate() {
 
             launchMount.armPivot.rotation.y = Math.PI;
             for (let i = 0; i < 4; i++) {
-                createSmoke();
+                addSmoke();
             }
             params.velocity += (5.5 + params.gravity) * dt ; 
             sls.position.y += params.velocity;
