@@ -36,27 +36,28 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     const lastipMesh = new THREE.Mesh(lastipGeom, enginesectionColor);
     const lasrocketGeom = new THREE.CylinderGeometry(0.25, 0.25, 3.5);
     const lasrocketMesh = new THREE.Mesh(lasrocketGeom, enginesectionColor);
-    const lasadapterGeom = new THREE.CylinderGeometry(0.25, 0.7, 2.3);
+    const lasadapterGeom = new THREE.CylinderGeometry(0.25, 0.5, 2.3);
     const lasadapterMesh = new THREE.Mesh(lasadapterGeom, enginesectionColor);
 
-    lastipMesh.position.set(0,37.5,0);
-    lasrocketMesh.position.set(0,35.5,0);
-    lasadapterMesh.position.set(0,32.6,0);
+    lastipMesh.position.set(0,38,0);
+    lasrocketMesh.position.set(0,36,0);
+    lasadapterMesh.position.set(0,33.3,0);
 
     las.add(lastipMesh);
     las.add(lasrocketMesh);
     las.add(lasadapterMesh);
 
+    // Crew Module panel
+
+    const crewpGeom = new THREE.CylinderGeometry(0.5, 1.9, 2.5);
+    const crewpMesh = new THREE.Mesh(crewpGeom, enginesectionColor);
+
+    crewpMesh.position.set(0,30.9,0);
+    las.add(crewpMesh);
+
+    las.name = "launch_abort_system"
+
     upperStage.add(las);
-
-    // Crew Module
-
-    const crewGeom = new THREE.CylinderGeometry(0.7, 1.9, 2);
-    const crewMesh = new THREE.Mesh(crewGeom, enginesectionColor);
-
-    crewMesh.position.set(0,30.5,0);
-
-    upperStage.add(crewMesh);
 
     // Encapsulated service module panels
 

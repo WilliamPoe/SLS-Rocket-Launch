@@ -41,6 +41,8 @@ const params = {
     rollProgram: false,
     pitchProgram: false,
     srbSep: false,
+    lasSep: false,
+    timer: 0,
     cameraSpeed: 1.5,
 };
 
@@ -256,7 +258,7 @@ function animate() {
             }
 
             // srb seperation
-            if (sls.position.y >= 500 && !params.srbSep){ // y = 1500 should be 20 sec into ascent
+            if (sls.position.y >= 500 && !params.srbSep){ // y = 1500 should be 20 sec into ascent (real 2m)
                 params.srbSep = true;
                 console.log('SRB Sep!');
                 scene.attach(srbR);
@@ -281,6 +283,17 @@ function animate() {
             }
 
             // Add LAS seperation
+            if (sls.position.y >= 1000 && !params.lasSep){ // 4400 should be 32 sec into ascent (real is 3m 13s)
+                params.lasSep = true;
+                console.log("LAS Sep!");
+
+                scene.attach(las);
+            }
+            if (params.lasSep && params.timer <= 2){
+                params.timer += dt
+                las.position.y += params.velocity+1;
+                las.position.x += params.velocity+1;
+            }
 
             // Add Second stage seperation
         }
@@ -299,6 +312,12 @@ function animate() {
         srbR.userData.vel = null;
         scene.remove(srbLFlame);
         scene.remove(srbRFlame);
+
+        params.lasSep = false;
+        sls.add(las);
+        las.position.set(0,0,0);
+        las.rotation.set(0,0,0);
+        params.timer = 0;
 
         params.velocity = 0;
         params.rollSpeed = 0;
