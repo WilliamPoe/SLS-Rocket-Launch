@@ -294,6 +294,13 @@ function animate() {
                 las.position.y += params.velocity+1;
                 las.position.x += params.velocity+1;
             }
+            if (las.position.y <= 500 && params.timer >= 2){
+                scene.remove(las);
+            }else if(params.lasSep && params.timer >= 2){
+                las.position.y += params.gravity;
+                las.position.x += params.velocity;
+                console.log(las.position.y)
+            }
 
             // Add Second stage seperation
         }
