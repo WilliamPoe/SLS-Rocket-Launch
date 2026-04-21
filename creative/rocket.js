@@ -17,6 +17,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 // Parts of Rocket
 
     const las = new THREE.Group();
+    const esmStage = new THREE.Group();
     const upperStage = new THREE.Group();
     const icps = new THREE.Group();
     const coreStage = new THREE.Group();
@@ -59,6 +60,31 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     upperStage.add(las);
 
+    // Crew module adapter
+
+    const crewaGeom = new THREE.CylinderGeometry(1.9, 1.9, 0.75);
+    const crewaMesh = new THREE.Mesh(crewaGeom, enginesectionColor);
+    crewaMesh.position.set(0,29.3, 0);
+    esmStage.add(crewaMesh);
+
+    // European service module
+
+    const esmGeom = new THREE.CylinderGeometry(1.2, 1.2, 1.8);
+    const esmMesh = new THREE.Mesh(esmGeom, engineColor);
+    esmMesh.position.set(0,28.1, 0);
+    esmStage.add(esmMesh);
+
+    // European service module engine
+
+    const esmeGeom = new THREE.ConeGeometry(0.20, 0.83);
+    const esmeMesh = new THREE.Mesh(esmeGeom, engineColor);
+    esmeMesh.position.set(0, 26.9, 0);
+    esmStage.add(esmeMesh);
+
+    esmStage.name = "euro_service_module";
+
+    upperStage.add(esmStage);
+
     // Encapsulated service module panels
 
     const panelColor = new THREE.MeshPhongMaterial({color: enginesectionColor, specular: "#808080", side: THREE.DoubleSide});
@@ -74,6 +100,13 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     upperStage.add(esmpRMesh);
     upperStage.add(esmpLMesh);
+
+    // Spacecraft Adapter
+    
+    const saGeom = new THREE.CylinderGeometry(1.2, 1.9, .75);
+    const saMesh = new THREE.Mesh(saGeom, enginesectionColor);
+    saMesh.position.set(0,26.85,0);
+    upperStage.add(saMesh);
 
     // Orion stage adapter
 
@@ -208,6 +241,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     return {
         sls,
         las,
+        esmStage,
         esmpLMesh,
         esmpRMesh,
         upperStage,
