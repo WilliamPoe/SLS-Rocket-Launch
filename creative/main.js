@@ -33,7 +33,6 @@ const params = {
     gravity: -5.3623,
     upperstageElevation: 0,
     lasElevation: 0,
-    srbSep: 0,
     launch: false,
     velocity: 0,
     rollSpeed: 0,
@@ -42,6 +41,7 @@ const params = {
     pitchProgram: false,
     srbSep: false,
     lasSep: false,
+    lasRemove: false,
     timer: 0,
     cameraSpeed: 1.5,
 };
@@ -62,7 +62,7 @@ const smokeGeom = new THREE.PlaneGeometry(1,1);
 const smokeTrail = [];
 
 
-// loading the rocekt and ml into the scene
+// loading the rocket and ml into the scene
 let rocketParts = makeRocket(params.corestageColor, params.enginesectionColor, params.engineColor, null, scene);
 let launchMount = makeLaunchMount(params.mlColor, params.enginesectionColor, scene);
 
@@ -72,6 +72,8 @@ let las = rocketParts.las;
 let upperStage = rocketParts.upperStage;
 let srbL = rocketParts.srbL;
 let srbR = rocketParts.srbR;
+let esmpL = rocketParts.esmpLMesh;
+let esmpR = rocketParts.esmpRMesh;
 
 const rocketPivot = new THREE.Group();
 scene.add(rocketPivot);
@@ -288,18 +290,30 @@ function animate() {
                 console.log("LAS Sep!");
 
                 scene.attach(las);
+                scene.attach(esmpL);
+                scene.attach(esmpR);
             }
-            if (params.lasSep && params.timer <= 2){
-                params.timer += dt
-                las.position.y += params.velocity+1;
-                las.position.x += params.velocity+1;
+            if (params.lasSep){
+                if(params.timer <= 5){
+                    params.timer += dt;
+                    las.position.y += params.velocity+1;
+                    las.position.x += params.velocity+1.5;
+                    esmpL.position.z -= 0.5;
+                    esmpR.position.z += 0.5;
+                }else{
+                    las.position.y += params.gravity;
+                    las.position.x += params.velocity;
+                }
             }
-            if (las.position.y <= 500 && params.timer >= 2){
-                scene.remove(las);
-            }else if(params.lasSep && params.timer >= 2){
-                las.position.y += params.gravity;
-                las.position.x += params.velocity;
-                console.log(las.position.y)
+            if (params.lasSep && las.position.y <= 500){
+                if(!params.lasRemove){
+                    las.parent.remove(las);
+                    esmpL.parent.remove(esmpL);
+                    esmpR.parent.remove(esmpR);
+                    las.position.y = 0;
+                    las.position.x = 0;
+                    params.lasRemove = true
+                }
             }
 
             // Add Second stage seperation
@@ -321,10 +335,18 @@ function animate() {
         scene.remove(srbRFlame);
 
         params.lasSep = false;
+        params.lasRemove = false;
         sls.add(las);
         las.position.set(0,0,0);
         las.rotation.set(0,0,0);
         params.timer = 0;
+
+        upperStage.add(esmpL);
+        upperStage.add(esmpR);
+        esmpL.position.set(0,28,0);
+        esmpR.position.set(0,28,0);
+        esmpL.rotation.set(0,0,0);
+        esmpR.rotation.set(0,Math.PI,0);
 
         params.velocity = 0;
         params.rollSpeed = 0;

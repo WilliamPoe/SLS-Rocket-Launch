@@ -61,12 +61,19 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     // Encapsulated service module panels
 
-    const esmpGeom = new THREE.CylinderGeometry(1.9, 1.9, 3);
-    const esmpMesh = new THREE.Mesh(esmpGeom, enginesectionColor);
+    const panelColor = new THREE.MeshPhongMaterial({color: enginesectionColor, specular: "#808080", side: THREE.DoubleSide});
+    var esmpRGeom = new THREE.CylinderGeometry(1.9, 1.9, 3.1, 32, 1, true, 0, Math.PI);
+    var esmpLGeom = new THREE.CylinderGeometry(1.9, 1.9, 3.1, 32, 1, true, 0, Math.PI);
+    var esmpRMesh = new THREE.Mesh(esmpRGeom, panelColor);
+    var esmpLMesh = new THREE.Mesh(esmpLGeom, panelColor);
+    esmpRMesh.position.set(0,28,0);
+    esmpLMesh.position.set(0,28,0);
+    esmpLMesh.rotation.set(0,Math.PI,0);
+    esmpRMesh.name = "esmR_panel";
+    esmpLMesh.name = "esmL_panel";
 
-    esmpMesh.position.set(0,28,0);
-
-    upperStage.add(esmpMesh);
+    upperStage.add(esmpRMesh);
+    upperStage.add(esmpLMesh);
 
     // Orion stage adapter
 
@@ -201,6 +208,8 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     return {
         sls,
         las,
+        esmpLMesh,
+        esmpRMesh,
         upperStage,
         coreStage,
         srbL,
