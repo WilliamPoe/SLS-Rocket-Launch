@@ -60,6 +60,13 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     upperStage.add(las);
 
+    // Orion capsule
+
+    const orionGeom = new THREE.CylinderGeometry(0.43, 1.8, 2);
+    const orionMesh = new THREE.Mesh(orionGeom, engineColor);
+    orionMesh.position.set(0,30.7, 0);
+    esmStage.add(orionMesh);
+
     // Crew module adapter
 
     const crewaGeom = new THREE.CylinderGeometry(1.9, 1.9, 0.75);
@@ -69,7 +76,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     // European service module
 
-    const esmGeom = new THREE.CylinderGeometry(1.2, 1.2, 1.8);
+    const esmGeom = new THREE.CylinderGeometry(1.3, 1.3, 1.8);
     const esmMesh = new THREE.Mesh(esmGeom, engineColor);
     esmMesh.position.set(0,28.1, 0);
     esmStage.add(esmMesh);
@@ -103,7 +110,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     // Spacecraft Adapter
     
-    const saGeom = new THREE.CylinderGeometry(1.2, 1.9, .75);
+    const saGeom = new THREE.CylinderGeometry(1.3, 1.9, .77);
     const saMesh = new THREE.Mesh(saGeom, enginesectionColor);
     saMesh.position.set(0,26.85,0);
     upperStage.add(saMesh);
