@@ -259,14 +259,13 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     };
 }
 
-function makeLaunchMount(mlColor, tankColor, scene){
+function makeLaunchMount(mlColor, scene){
 
     const ml1 = new THREE.Group();
     const launchTower = new THREE.Group();
     const launchMount = new THREE.Group();
 
     const launchMat = new THREE.MeshPhongMaterial({ color:  mlColor, specular: "#808080" });
-    const tankMat = new THREE.MeshPhongMaterial({ color: tankColor, specular: "#808080" });
 
     // launch mount
     const mount = new THREE.Mesh(new THREE.BoxGeometry(22.5,27.5,4.16), launchMat);
@@ -309,28 +308,6 @@ function makeLaunchMount(mlColor, tankColor, scene){
     armPivot.add(crewArm);
     armPivot.rotation.y = -Math.PI / 25;
 
-    // lox tank
-    const loxTank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
-    loxTank.position.set(-105,-23,-108),
-    scene.add(loxTank);
-
-    // lox line
-    const loxLine = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), launchMat);
-    loxLine.rotation.y = Math.PI / 4;
-    loxLine.position.set(-55, -29, -58);
-    scene.add(loxLine);
-
-    // lh2 tank
-    const lh2Tank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
-    lh2Tank.position.set(105,-23,-108),
-    scene.add(lh2Tank);
-
-    // lh2 line
-    const lh2Line = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), launchMat);
-    lh2Line.rotation.y = -Math.PI / 4;
-    lh2Line.position.set(55, -29, -58);
-    scene.add(lh2Line);
-
 
     launchMount.add(mount);
     launchMount.add(qdPivot);
@@ -343,7 +320,7 @@ function makeLaunchMount(mlColor, tankColor, scene){
     ml1.add(launchTower);
 
     scene.add(ml1);
-    
+
 
     return {
         ml1,
@@ -353,15 +330,62 @@ function makeLaunchMount(mlColor, tankColor, scene){
         loxqd,
         tower,
         armPivot,
-        crewArm,
-        loxTank,
-        loxLine,
-        lh2Tank,
-        lh2Line
+        crewArm
     };
 }
 
-function makeLaunchComplex(){
+function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
+
+    const launchPad = new THREE.Group();
+
+    const padMat = new THREE.MeshPhongMaterial({ color: padColor});
+    const tankMat = new THREE.MeshPhongMaterial({ color: tankColor, specular: "#808080" });
+    const pipeMat = new THREE.MeshPhongMaterial({ color:  pipeColor, specular: "#808080" });
+
+    // ground plane
+    const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(600, 600),
+    new THREE.MeshPhongMaterial({ color: 0x228B22,  side: THREE.DoubleSide} )
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -38;
+    scene.add(ground);
+
+    // lox tank
+    const loxTank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
+    loxTank.position.set(-105,-32,-108),
+    scene.add(loxTank);
+
+    // lox line
+    const loxLine = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), pipeMat);
+    loxLine.rotation.y = Math.PI / 4;
+    loxLine.position.set(-55, -38, -58);
+    scene.add(loxLine);
+
+    // lh2 tank
+    const lh2Tank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
+    lh2Tank.position.set(105,-32,-108),
+    scene.add(lh2Tank);
+
+    // lh2 line
+    const lh2Line = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), pipeMat);
+    lh2Line.rotation.y = -Math.PI / 4;
+    lh2Line.position.set(55, -38, -58);
+    scene.add(lh2Line);
+
+    const pad = new THREE.Mesh(new THREE.BoxGeometry(40,65.61,9.16), padMat);
+    pad.rotation.set(Math.PI/2,0,0);
+    pad.position.set(-4,-33.66,-23);
+    scene.add(pad);
+
+    return {
+        ground,
+        loxTank,
+        loxLine,
+        lh2Tank,
+        lh2Line,
+        launchPad
+    };
 
 }
 
