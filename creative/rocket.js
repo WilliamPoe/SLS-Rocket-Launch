@@ -361,5 +361,10 @@ function makeLaunchMount(mlColor, tankColor, scene){
     };
 }
 
+function makeLaunchComplex(){
+
+}
+
 export {makeRocket};
 export {makeLaunchMount};
+export {makeLaunchComplex};

@@ -42,6 +42,7 @@ const params = {
     srbSep: false,
     lasSep: false,
     lasRemove: false,
+    coreSep: false,
     timer: 0,
     cameraSpeed: 1.5,
 };
@@ -69,11 +70,12 @@ let launchMount = makeLaunchMount(params.mlColor, params.enginesectionColor, sce
 // Making the accessible for the gui
 let sls = rocketParts.sls;
 let las = rocketParts.las;
-let upperStage = rocketParts.upperStage;
-let srbL = rocketParts.srbL;
-let srbR = rocketParts.srbR;
 let esmpL = rocketParts.esmpLMesh;
 let esmpR = rocketParts.esmpRMesh;
+let upperStage = rocketParts.upperStage;
+let coreStage = rocketParts.coreStage;
+let srbL = rocketParts.srbL;
+let srbR = rocketParts.srbR;
 
 const rocketPivot = new THREE.Group();
 scene.add(rocketPivot);
@@ -159,7 +161,7 @@ scene.add(light);
 const helper = new THREE.DirectionalLightHelper( light, 5 );
 //scene.add( helper );
 
-// point lighting
+// srb point lighting
 const srbLFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 
@@ -168,8 +170,10 @@ scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 // loading in the texture for the sky
 const loader = new THREE.TextureLoader();
 loader.load('/images/sky.jpg', function(texture) {
-    scene.background = texture;
+    //scene.background = texture;
 });
+
+scene.background = new THREE.Color(0x87CEEB);
 
 // ================================================================
 
@@ -284,7 +288,7 @@ function animate() {
                 })
             }
 
-            // Add LAS seperation
+            // las seperation
             if (sls.position.y >= 1000 && !params.lasSep){ // 4400 should be 32 sec into ascent (real is 3m 13s)
                 params.lasSep = true;
                 console.log("LAS Sep!");
@@ -315,8 +319,13 @@ function animate() {
                     params.lasRemove = true
                 }
             }
-
+            
             // Add Second stage seperation
+            if(sls.position.y >= 2700 && !params.coreSep){ // 27000 should be 80 sec into ascent (real 8m)
+                params.coreSep = true;
+
+                scene.attach(coreStage);
+            }
         }
     } else { // Resets the scene
         sls.position.y = -1.5;
@@ -347,6 +356,11 @@ function animate() {
         esmpR.position.set(0,28,0);
         esmpL.rotation.set(0,0,0);
         esmpR.rotation.set(0,Math.PI,0);
+
+        params.coreSep = false;
+        sls.add(coreStage);
+        coreStage.position.set(0,0,0);
+        coreStage.rotation.set(0,0,0);
 
         params.velocity = 0;
         params.rollSpeed = 0;
