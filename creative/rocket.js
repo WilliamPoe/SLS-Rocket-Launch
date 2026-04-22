@@ -6,16 +6,15 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     if (oldRocket) scene.remove(oldRocket);
 
+    // materials
     const corestageColor =  new THREE.MeshPhongMaterial({color: coreColor, specular: "#808080"});
     const enginesectionColor = new THREE.MeshPhongMaterial({color: engSecColor, specular: "#808080"});
     const engineColor =  new THREE.MeshPhongMaterial({color: engColor, specular: "#808080"});
 
-// Whole Rocket
-
+    // Whole Rocket
     const sls = new THREE.Group();
 
-// Parts of Rocket
-
+    // Parts of Rocket
     const las = new THREE.Group();
     const esmStage = new THREE.Group();
     const upperStage = new THREE.Group();
@@ -261,29 +260,31 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
 function makeLaunchMount(mlColor, scene){
 
+    // Parts of launch mount
     const ml1 = new THREE.Group();
     const launchTower = new THREE.Group();
     const launchMount = new THREE.Group();
 
+    // Materials
     const launchMat = new THREE.MeshPhongMaterial({ color:  mlColor, specular: "#808080" });
 
-    // launch mount
+    // Launch mount
     const mount = new THREE.Mesh(new THREE.BoxGeometry(22.5,27.5,4.16), launchMat);
     mount.rotation.set(Math.PI/2,0,0);
     mount.position.set(0,-27,-4.5);
 
-    // quick disconnect
+    // Quick disconnect
     const qdPivot = new THREE.Group();
 
     qdPivot.position.set(0, -23.5, 0);
 
-    // lox quick disconnect
+    // Lox quick disconnect
     const loxqd  = new THREE.Mesh(new THREE.BoxGeometry(3, 2, 5.5), launchMat);
     loxqd.position.set(-2, 0, 6.5);
     loxqd.rotation.set(Math.PI/2,0,.25);
     qdPivot.add(loxqd);
 
-    // lh2 quick disconnect
+    // Lh2 quick disconnect
     const lh2qd  = new THREE.Mesh(new THREE.BoxGeometry(3, 2, 5.5), launchMat);
     lh2qd.position.set(2, 0, 6.5);
     lh2qd.rotation.set(Math.PI/2,0,-.25);
@@ -293,14 +294,14 @@ function makeLaunchMount(mlColor, scene){
     
     const tower  = new THREE.Mesh(new THREE.BoxGeometry(6.66, 6.66, 62.5), launchMat);
     
-    // launch tower
+    // Launch tower
     tower.rotation.set(Math.PI/2,0,0);
     tower.position.set(0, 5, -13.5);
     
     const armPivot = new THREE.Group();
     armPivot.position.set(4, 29, -11);
     
-    // launch tower crew arm
+    // Launch tower crew arm
     const crewArm = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 15), launchMat);
     
     crewArm.position.set(0, 0, 6);
@@ -336,13 +337,15 @@ function makeLaunchMount(mlColor, scene){
 
 function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
 
+    // Parts of launch pad
     const launchPad = new THREE.Group();
 
+    // Material
     const padMat = new THREE.MeshPhongMaterial({ color: padColor});
     const tankMat = new THREE.MeshPhongMaterial({ color: tankColor, specular: "#808080" });
     const pipeMat = new THREE.MeshPhongMaterial({ color:  pipeColor, specular: "#808080" });
 
-    // ground plane
+    // Ground plane
     const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(600, 600),
     new THREE.MeshPhongMaterial({ color: 0x228B22,  side: THREE.DoubleSide} )
@@ -351,32 +354,35 @@ function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
     ground.position.y = -38;
     scene.add(ground);
 
-    // lox tank
+    // Lox tank
     const loxTank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
     loxTank.position.set(-105,-32,-108),
     scene.add(loxTank);
 
-    // lox line
+    // Lox line
     const loxLine = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), pipeMat);
     loxLine.rotation.y = Math.PI / 4;
     loxLine.position.set(-55, -38, -58);
     scene.add(loxLine);
 
-    // lh2 tank
+    // Lh2 tank
     const lh2Tank = new THREE.Mesh(new THREE.SphereGeometry( 6.5 ), tankMat);
     lh2Tank.position.set(105,-32,-108),
     scene.add(lh2Tank);
 
-    // lh2 line
+    // Lh2 line
     const lh2Line = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 130), pipeMat);
     lh2Line.rotation.y = -Math.PI / 4;
     lh2Line.position.set(55, -38, -58);
     scene.add(lh2Line);
 
+    // Launch pad
     const pad = new THREE.Mesh(new THREE.BoxGeometry(40,65.61,9.16), padMat);
     pad.rotation.set(Math.PI/2,0,0);
     pad.position.set(-4,-33.66,-23);
     scene.add(pad);
+
+    // Launch pad ramp
 
     return {
         ground,
