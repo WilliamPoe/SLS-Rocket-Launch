@@ -335,6 +335,54 @@ function makeLaunchMount(mlColor, scene){
     };
 }
 
+function createPadRamp(width, height, depth) {
+    const geom = new THREE.BufferGeometry();
+    const w = width / 2;
+
+    const vertices = new Float32Array([
+        // bottom of ramp
+        -w, 0, depth/2,
+        w, 0, depth/2,
+        w, 0, -depth/2,
+        -w, 0, -depth/2,
+
+        // back of ramp
+        -w, 0, -depth/2,
+        w, 0, -depth/2,
+        w, height, -depth/2,
+        -w, height, -depth/2,
+
+        // left side
+        -w, 0, depth/2,
+        -w, 0, -depth/2,
+        -w, height, -depth/2,
+
+        // right side
+        w, 0, depth/2,
+        w, height, -depth/2,
+        w, 0, -depth/2,
+
+        // top of ramp
+        -w, 0, depth/2,
+        w, 0, depth/2,
+        w, height, -depth/2,
+        -w, height, -depth/2,
+    ]);
+
+    const indices = [
+        0, 2, 1, 0, 3, 2, // bottom
+        4, 6, 5, 4, 7, 6, // back
+        9, 8, 10, // left
+        12, 11, 13, // right
+        14, 15, 16, 14, 16, 17, // ramp
+    ];
+
+    geom.setIndex(indices);
+    geom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geom.computeVertexNormals();
+    return geom;
+}
+
 function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
 
     // Parts of launch pad
@@ -380,9 +428,16 @@ function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
     const pad = new THREE.Mesh(new THREE.BoxGeometry(40,65.61,9.16), padMat);
     pad.rotation.set(Math.PI/2,0,0);
     pad.position.set(-4,-33.66,-23);
-    scene.add(pad);
+    launchPad.add(pad);
 
     // Launch pad ramp
+    const padRamp = createPadRamp(25, 9.16, 181.27); 
+    const padRampMesh = new THREE.Mesh(padRamp, padMat);
+    padRampMesh.position.set(0, -38.16, 100);
+    launchPad.add(padRampMesh);
+
+    launchPad.position.set(0, 0, 25);
+    scene.add(launchPad);
 
     return {
         ground,
@@ -392,7 +447,6 @@ function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
         lh2Line,
         launchPad
     };
-
 }
 
 export {makeRocket};
