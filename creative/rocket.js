@@ -335,7 +335,7 @@ function makeLaunchMount(mlColor, scene){
     };
 }
 
-function createPadRamp(width, height, depth) {
+function RampGeometry(width, height, depth) {
     const geom = new THREE.BufferGeometry();
     const w = width / 2;
 
@@ -431,7 +431,7 @@ function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
     launchPad.add(pad);
 
     // Launch pad ramp
-    const padRamp = createPadRamp(25, 9.16, 181.27); 
+    const padRamp = RampGeometry(25, 9.16, 181.27); 
     const padRampMesh = new THREE.Mesh(padRamp, padMat);
     padRampMesh.position.set(0, -38.16, 100);
     launchPad.add(padRampMesh);
