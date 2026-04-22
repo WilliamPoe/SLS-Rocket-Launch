@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { TW } from 'tw';
 import GUI from 'gui';
-import { makeRocket, makeLaunchMount } from './rocket.js';
+import { makeRocket, makeLaunchMount, makeLaunchComplex } from './rocket.js';
 
 console.log(`Loaded Three.js version ${THREE.REVISION}`);
 
@@ -30,6 +30,7 @@ const params = {
     enginesectionColor: "#ffffff",
     engineColor: "#808080",
     mlColor: 0x696563,
+    padColor: 0xb88665,
     gravity: -5.3623,
     upperstageElevation: 0,
     lasElevation: 0,
@@ -65,7 +66,8 @@ const smokeTrail = [];
 
 // loading the rocket and ml into the scene
 let rocketParts = makeRocket(params.corestageColor, params.enginesectionColor, params.engineColor, null, scene);
-let launchMount = makeLaunchMount(params.mlColor, params.enginesectionColor, scene);
+let launchMount = makeLaunchMount(params.mlColor, scene);
+let launchComplex = makeLaunchComplex(params.padColor, params.enginesectionColor, params.mlColor, scene);
 
 // Making the accessible for the gui
 let sls = rocketParts.sls;
@@ -139,15 +141,6 @@ function exhaustSmoke() {
         }
     }
 }
-
-// ground plane
-const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(600, 600),
-    new THREE.MeshPhongMaterial({ color: 0x228B22,  side: THREE.DoubleSide} )
-);
-ground.rotation.x = -Math.PI / 2;
-ground.position.y = -29;
-scene.add(ground);
 
 // ambient lighting
 const amb = new THREE.AmbientLight(0xffffff, 1);
