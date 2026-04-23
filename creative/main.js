@@ -20,9 +20,18 @@ globalThis.scene = scene;
 2. Added more detail to the Interim cryogenic propulsion stage (IPCS) in the rocket.js
 3. Added SRB seperation from the core stage
 4. Added a light to each of the SRBs to give the look of a flame
+
+//=====================Added For Project Alpha=====================
+1. Added launch abort system separation
+2. Added european service module
+3. Added orion capsule
+4. Added second stage separation
+5. Added flame for icps after separation
+6. Added background color transition from blue to black as height increase
 */
 
 // ================================================================
+
 // Build your scene here
 // params for the rocket
 const params = {
@@ -74,6 +83,7 @@ let sls = rocketParts.sls;
 let las = rocketParts.las;
 let esmpL = rocketParts.esmpLMesh;
 let esmpR = rocketParts.esmpRMesh;
+let icps = rocketParts.icps;
 let upperStage = rocketParts.upperStage;
 let coreStage = rocketParts.coreStage;
 let srbL = rocketParts.srbL;
@@ -158,6 +168,9 @@ const helper = new THREE.DirectionalLightHelper( light, 5 );
 const srbLFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 
+// icps point light
+const icpsFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+
 scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
 // loading in the texture for the sky
@@ -165,8 +178,6 @@ const loader = new THREE.TextureLoader();
 loader.load('/images/sky.jpg', function(texture) {
     //scene.background = texture;
 });
-
-scene.background = new THREE.Color(0x87CEEB);
 
 // ================================================================
 
@@ -309,8 +320,12 @@ function animate() {
                     esmpR.parent.remove(esmpR);
                     las.position.y = 0;
                     las.position.x = 0;
-                    params.lasRemove = true
+                    params.lasRemove = true;
                 }
+            }
+
+            if (params.lasSep){
+                scene.background.lerp(new THREE.Color("black"), 0.003);
             }
             
             // Add Second stage seperation
@@ -319,8 +334,24 @@ function animate() {
 
                 scene.attach(coreStage);
             }
+
+            if (params.coreSep){
+                const icpsEngine = icps.getObjectByName("icps_engine");
+                
+                const icpsEnginePos = new THREE.Vector3();
+                icpsEngine.getWorldPosition(icpsEnginePos);
+                
+                icpsFlame.position.copy(icpsEnginePos);
+                icpsFlame.position.y = icpsEnginePos.y-3;
+
+                scene.add(icpsFlame);
+
+            }
         }
     } else { // Resets the scene
+
+        scene.background = new THREE.Color(0x87CEEB);
+
         sls.position.y = -1.5;
         sls.position.z = 0;
 

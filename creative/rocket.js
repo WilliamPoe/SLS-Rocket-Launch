@@ -148,6 +148,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     const icpsEngineMesh = new THREE.Mesh(icpsEngineGeom, engineColor);
 
     icpsEngineMesh.position.set(0,19.5,0);
+    icpsEngineMesh.name = "icps_engine";
     icps.add(icpsEngineMesh);
     icps.name = "icps";
 
@@ -250,6 +251,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
         esmStage,
         esmpLMesh,
         esmpRMesh,
+        icps,
         upperStage,
         coreStage,
         srbL,
