@@ -28,6 +28,7 @@ globalThis.scene = scene;
 4. Added second stage separation
 5. Added flame for icps after separation
 6. Added background color transition from blue to black as height increase
+7. Added european service module and orion capsule separation
 */
 
 // ================================================================
@@ -53,6 +54,7 @@ const params = {
     lasSep: false,
     lasRemove: false,
     coreSep: false,
+    esmSep: false,
     timer: 0,
     cameraSpeed: 1.5,
 };
@@ -347,6 +349,12 @@ function animate() {
                 scene.add(icpsFlame);
 
             }
+
+            if (sls.position.y >= 3700 && !params.esmSep){
+                params.esmSep = true;
+
+                scene.attach(icps);
+            }
         }
     } else { // Resets the scene
 
@@ -369,7 +377,7 @@ function animate() {
 
         params.lasSep = false;
         params.lasRemove = false;
-        sls.add(las);
+        upperStage.add(las);
         las.position.set(0,0,0);
         las.rotation.set(0,0,0);
         params.timer = 0;
@@ -385,6 +393,11 @@ function animate() {
         sls.add(coreStage);
         coreStage.position.set(0,0,0);
         coreStage.rotation.set(0,0,0);
+
+        params.esmSep = false;
+        upperStage.add(icps);
+        icps.position.set(0,0,0);
+        icps.rotation.set(0,0,0);
 
         params.velocity = 0;
         params.rollSpeed = 0;

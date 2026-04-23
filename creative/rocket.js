@@ -112,7 +112,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     const saGeom = new THREE.CylinderGeometry(1.3, 1.9, .77);
     const saMesh = new THREE.Mesh(saGeom, enginesectionColor);
     saMesh.position.set(0,26.85,0);
-    upperStage.add(saMesh);
+    icps.add(saMesh);
 
     // Orion stage adapter
 
@@ -121,7 +121,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
 
     osaMesh.position.set(0,26,0);
 
-    upperStage.add(osaMesh);
+    icps.add(osaMesh);
 
     // Interim cryogenic propulsion stage
 
