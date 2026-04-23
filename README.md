@@ -1,3 +1,3 @@
 ## SLS Rocket Launch
 
-Creating a NASA SLS Rocket launch using Three.js. Showcasing the different stages of the rocket and their separation through the ascent of the flight.
+Creating a NASA SLS rocket launch using Three.js. Showcasing the rocket's different stages and their separation during the ascent of the flight.
