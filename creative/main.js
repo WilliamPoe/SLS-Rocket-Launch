@@ -88,6 +88,7 @@ let esmpR = rocketParts.esmpRMesh;
 let icps = rocketParts.icps;
 let upperStage = rocketParts.upperStage;
 let coreStage = rocketParts.coreStage;
+let rs25Engines = rocketParts.rs25Engines;
 let srbL = rocketParts.srbL;
 let srbR = rocketParts.srbR;
 
@@ -173,6 +174,12 @@ const srbRFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 // icps point light
 const icpsFlame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
 
+// core stage point lights
+const core0Flame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+const core1Flame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+const core2Flame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+const core3Flame = new THREE.PointLight(0xFFA500, 1000, 0, 1);
+
 scene.fog = new THREE.Fog(0x87CEEB, 50,400);
 
 // loading in the texture for the sky
@@ -225,16 +232,37 @@ function animate() {
 
             const lNozzel = srbL.getObjectByName("left_nozzel");
             const rNozzel = srbR.getObjectByName("right_nozzel");
+            const engine0 = rs25Engines.getObjectByName("engine0");
+            const engine1 = rs25Engines.getObjectByName("engine1");
+            const engine2 = rs25Engines.getObjectByName("engine2");
+            const engine3 = rs25Engines.getObjectByName("engine3");
+
 
             const lNozzelPos = new THREE.Vector3();
             const rNozzelPos = new THREE.Vector3();
+            const engine0Pos = new THREE.Vector3();
+            const engine1Pos = new THREE.Vector3();
+            const engine2Pos = new THREE.Vector3();
+            const engine3Pos = new THREE.Vector3();
             lNozzel.getWorldPosition(lNozzelPos);
             rNozzel.getWorldPosition(rNozzelPos);
+            engine0.getWorldPosition(engine0Pos);
+            engine1.getWorldPosition(engine1Pos);
+            engine2.getWorldPosition(engine2Pos);
+            engine3.getWorldPosition(engine3Pos);
 
             srbLFlame.position.copy(lNozzelPos);
             srbRFlame.position.copy(rNozzelPos);
+            core0Flame.position.copy(engine0Pos);
+            core1Flame.position.copy(engine1Pos);
+            core2Flame.position.copy(engine2Pos);
+            core3Flame.position.copy(engine3Pos);
             srbLFlame.position.y = lNozzelPos.y-10;
             srbRFlame.position.y = rNozzelPos.y-10;
+            core0Flame.position.y = engine0Pos.y-10;
+            core1Flame.position.y = engine1Pos.y-10;
+            core2Flame.position.y = engine2Pos.y-10;
+            core3Flame.position.y = engine3Pos.y-10;
 
             launchMount.armPivot.rotation.y = Math.PI;
             for (let i = 0; i < 4; i++) {
@@ -244,12 +272,17 @@ function animate() {
             sls.position.y += params.velocity;
             scene.add(srbLFlame);
             scene.add(srbRFlame);
+            scene.add(core0Flame);
+            scene.add(core1Flame);
+            scene.add(core2Flame);
+            scene.add(core3Flame);
+
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
 
             // Wont rotate until the rocket is high enough
             // Change the 20 to a higher value eventually!!
-            if(sls.position.y >= 20 && rocketPivot.rotation.y <= Math.PI/2){
+            if(sls.position.y >= 40 && rocketPivot.rotation.y <= Math.PI/2){
                 params.rollSpeed += 0.0001;
                 rocketPivot.rotation.y += params.rollSpeed;
                 params.cameraSpeed = 1;
@@ -333,8 +366,13 @@ function animate() {
             // Add Second stage seperation
             if(sls.position.y >= 2700 && !params.coreSep){ // 27000 should be 80 sec into ascent (real 8m)
                 params.coreSep = true;
+                console.log("Core Sep!");
 
                 scene.attach(coreStage);
+                scene.remove(core0Flame);
+                scene.remove(core1Flame);
+                scene.remove(core2Flame);
+                scene.remove(core3Flame);
             }
 
             if (params.coreSep){
@@ -352,8 +390,10 @@ function animate() {
 
             if (sls.position.y >= 3700 && !params.esmSep){
                 params.esmSep = true;
+                console.log("ICPS Sep!");
 
                 scene.attach(icps);
+                scene.remove(icpsFlame);
             }
         }
     } else { // Resets the scene
@@ -393,11 +433,16 @@ function animate() {
         sls.add(coreStage);
         coreStage.position.set(0,0,0);
         coreStage.rotation.set(0,0,0);
+        scene.remove(core0Flame);
+        scene.remove(core1Flame);
+        scene.remove(core2Flame);
+        scene.remove(core3Flame);
 
         params.esmSep = false;
         upperStage.add(icps);
         icps.position.set(0,0,0);
         icps.rotation.set(0,0,0);
+        scene.remove(icpsFlame);
 
         params.velocity = 0;
         params.rollSpeed = 0;

@@ -187,6 +187,11 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
     engineMesh2.position.set(-1.6,-23,0);
     engineMesh3.position.set(0,-23,-1.6);
 
+    engineMesh0.name = "engine0";
+    engineMesh1.name = "engine1";
+    engineMesh2.name = "engine2";
+    engineMesh3.name = "engine3";
+
 
     rs25Engines.add(engineMesh0);
     rs25Engines.add(engineMesh1);
@@ -254,6 +259,7 @@ function makeRocket (coreColor, engSecColor, engColor, oldRocket = NULL, scene){
         icps,
         upperStage,
         coreStage,
+        rs25Engines,
         srbL,
         srbR,
         srb
