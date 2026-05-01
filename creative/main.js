@@ -280,6 +280,10 @@ function animate() {
             // move the camera along with the rocket at same velocity increase
             camera.position.y += params.velocity/params.cameraSpeed;
 
+            const slsPos = new THREE.Vector3();
+            sls.getWorldPosition(slsPos);
+            camera.position.z = slsPos.z + 100;
+
             // Wont rotate until the rocket is high enough
             // Change the 20 to a higher value eventually!!
             if(sls.position.y >= 40 && rocketPivot.rotation.y <= Math.PI/2){
