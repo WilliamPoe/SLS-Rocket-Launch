@@ -389,17 +389,41 @@ function makeLaunchComplex(padColor, tankColor, pipeColor, scene){
 
     // Parts of launch pad
     const launchPad = new THREE.Group();
+    
+    // Load textures for grass 
+    // Credits: https://everytexture.com/everytexture-com-stock-nature-grass-texture-00005-2/
+    const groundDif = new THREE.TextureLoader().load('/images/diffuse.jpg');
+    const groundNorm = new THREE.TextureLoader().load('/images/normal.jpg');
+    const groundStandard = new THREE.TextureLoader().load('/images/standard.jpg');
+
+    // Enable wrapping to repeat texture
+    groundDif.wrapS = THREE.RepeatWrapping;
+    groundNorm.wrapS = THREE.RepeatWrapping;
+    groundStandard.wrapS = THREE.RepeatWrapping;
+
+    groundDif.wrapT = THREE.RepeatWrapping;
+    groundNorm.wrapT = THREE.RepeatWrapping;
+    groundStandard.wrapT = THREE.RepeatWrapping;
+
+    groundDif.repeat.set(10,10);
+    groundNorm.repeat.set(10,10);
+    groundStandard.repeat.set(10,10);
+
 
     // Material
+    const groundMat = new THREE.MeshStandardMaterial({
+        map:groundDif,
+        normalMap: groundNorm,
+        roughness: groundStandard,
+        metalness: .7,
+        normalScale: new THREE.Vector2(2, 2)
+    })
     const padMat = new THREE.MeshPhongMaterial({ color: padColor});
     const tankMat = new THREE.MeshPhongMaterial({ color: tankColor, specular: "#808080" });
     const pipeMat = new THREE.MeshPhongMaterial({ color:  pipeColor, specular: "#808080" });
 
     // Ground plane
-    const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(600, 600),
-    new THREE.MeshPhongMaterial({ color: 0x228B22,  side: THREE.DoubleSide} )
-    );
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600),groundMat);
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = -38;
     scene.add(ground);
