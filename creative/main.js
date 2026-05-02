@@ -29,6 +29,13 @@ globalThis.scene = scene;
 5. Added flame for icps after separation
 6. Added background color transition from blue to black as height increase
 7. Added european service module and orion capsule separation
+
+
+//=====================Added For Project Alpha=====================
+1. Fixed issue where camera zooms/moves away out as height increases
+2. Switched ground plane to texture image to look more realistic
+3. Added flames to core stage of rocket
+4. Added webpage for project assignment
 */
 
 // ================================================================
