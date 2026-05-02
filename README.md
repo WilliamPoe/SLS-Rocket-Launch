@@ -12,6 +12,8 @@ involve many stages because rockets are complicated and have stage separation ev
 complex to model and animate.
 
 
-<img width="1297" height="1572" alt="Screenshot 2026-04-23 152649" src="https://github.com/user-attachments/assets/30254d9f-3180-4884-981b-776c851798df" />
+<img width="1292" height="1320" alt="liftoff" src="https://github.com/user-attachments/assets/c971a841-6f3f-4fde-be78-d586a8e92e6d" />
+
+
 
 [Here is my website](https://warren.sewanee.edu/poewt0/CS360-rocket-launch/home.html)
